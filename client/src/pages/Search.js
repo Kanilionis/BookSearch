@@ -32,6 +32,16 @@ function SearchBook(){
 
     }
   
+  function bookState(bookData){
+    return {
+      title: bookData.volumeInfo.title,
+      authors: bookData.volumeInfo.authors,
+      link: bookData.volumeInfo.infoLink,
+      description: bookData.volumeInfo.description,
+      googleID: bookData.id,
+      image: bookData.volumeInfo.imageLinks.thumbnail
+    }
+  }
 
   function handleFormSubmit(event){
     
@@ -40,25 +50,18 @@ function SearchBook(){
     API.searchBooks(bookSearch)
     // console.log(search)
     .then(res => {
-      var searchRes = res.data.items
+      // var searchRes = res.data.items
       // console.log(res.data.items)
-      for (var i=0; i<searchRes.length; i++){
-        console.log(searchRes[i])
+      // for (var i=0; i<searchRes.length; i++){
+      //   console.log(searchRes[i])
         // setBooks(res.data.items)
         setBooks(
-          {
-            title: res.data.items[i].volumeInfo.title,
-            authors: res.data.items[i].volumeInfo.authors,
-            link: res.data.items[i].volumeInfo.infoLink,
-            description: res.data.items[i].volumeInfo.description,
-            googleID: res.data.items[i].id,
-            image: res.data.items[i].volumeInfo.imageLinks.thumbnail
-          }
+          res.data.items.map(bookData => bookState(bookData))
         )
           
         // )
       }
-    })
+    )
       
     .catch(err => console.log(err));
     console.log(books)
@@ -100,12 +103,12 @@ function SearchBook(){
     </form>
     <div>
     
-      {/* {books.map(book => ( */}
+      {books.map(book => (
          <span className="container-fluid">
-        <img className="col-2" height="150px" width="auto" src={books.image} alt={books.title}></img>
-        <h2 className="col-10">{books.title}</h2>
-        <p>by {books.authors}</p>
-        <p>{books.description}</p>
+        <img className="col-2" height="150px" width="auto" src={book.image} alt={book.title}></img>
+        <h2 className="col-10">{book.title}</h2>
+        <p>by {book.authors}</p>
+        <p>{book.description}</p>
         <button 
         onClick={saveThisBook}
         // onClick={() => saveThisBook(book._id)}
@@ -114,8 +117,8 @@ function SearchBook(){
       
         
         
-        {/* )) */}
-        {/* } */}
+        ))
+         } 
         <SavedBooks {...savedBooks}/>
   
     </div>
